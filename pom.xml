@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.telegrambot</groupId>
 	<artifactId>EasyTelegramBuilder</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>Easy telegram bot builder</name>
 	<description>Easy telegram bot builder</description>
 

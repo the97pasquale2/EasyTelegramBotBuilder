@@ -6,5 +6,5 @@ import org.telegram.telegrambots.api.objects.Update;
 
 public interface BuildRequestMessage {
 	//Update can be null if it's the first message
-	SendMessage buildMessage(LinkedMap<String, Update> responses, Update lastUpdate, Long chatId, boolean error);
+	SendMessage buildMessage(LinkedMap<String, Update> responses, Update lastUpdate, Long chatId, String error);
 }

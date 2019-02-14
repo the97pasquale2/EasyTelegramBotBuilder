@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import java.lang.reflect.Field;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.api.objects.CallbackQuery;
@@ -22,7 +23,7 @@ public class CommandTest {
 	
 	//I just want to test my method because I'm assuming Telegram services are already tested...
 	//This is why I'm forcing setting private fields...
-
+	
 	@Test
 	public void commandTestNoParams() throws Exception {
 		
@@ -169,6 +170,48 @@ public class CommandTest {
 		spy.onUpdateReceived(update);
 		
 		verify(spy, times(1)).anotherCommand(update);
+				
+	}
+	
+	@Test
+	public void commandTestGroup_OK() throws Exception {
+		
+		MyTestBot spy = Mockito.spy(myTestBot);
+
+		Update update = new Update();
+		Message message = new Message();
+		
+		Chat chat = new Chat();
+		set(chat, "id", -50L);
+		set(message, "chat", chat);
+		
+		set(message, "text", "/role");
+		set(update, "message", message);
+		
+		spy.onUpdateReceived(update);
+		
+		verify(spy, times(1)).role(update);
+				
+	}
+	
+	@Test
+	public void commandTestGroup_Fail() throws Exception {
+		
+		MyTestBot spy = Mockito.spy(myTestBot);
+
+		Update update = new Update();
+		Message message = new Message();
+		
+		Chat chat = new Chat();
+		set(chat, "id", 50L);
+		set(message, "chat", chat);
+		
+		set(message, "text", "/role");
+		set(update, "message", message);
+		
+		spy.onUpdateReceived(update);
+		
+		verify(spy, times(0)).role(update);
 				
 	}
 	

@@ -8,7 +8,7 @@ public class Command {
 		
 	
 	public Command(String textReceived) {
-		Object[] splitBySpace = textReceived.split("\\s+");
+		Object[] splitBySpace = textReceived.split("_|\\s+");
 		command = splitBySpace[0].toString();
 		params = new Object[]{};
 		if(splitBySpace.length >= 2) {
