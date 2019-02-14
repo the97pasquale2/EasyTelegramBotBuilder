@@ -11,5 +11,6 @@ public @interface BotHandler {
 	
 	public Type type() default Type.COMMAND;
 	public String value();
+	public Role role() default Role.ALL;
 	
 }
