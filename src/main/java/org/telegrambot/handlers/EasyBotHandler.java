@@ -17,7 +17,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegrambot.annotations.BotHandler;
 import org.telegrambot.annotations.Role;
 import org.telegrambot.annotations.Type;
-import org.telegrambot.exceptions.InexistentCommand;
+import org.telegrambot.exceptions.InexistentCommandException;
 import org.telegrambot.exceptions.InsufficientPermission;
 import org.telegrambot.exceptions.WrongParamsNumberException;
 import org.telegrambot.utils.Cache;
@@ -32,7 +32,7 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 
 	protected abstract void handleError(InsufficientPermission e);
 	protected abstract void handleError(WrongParamsNumberException e);
-	protected abstract void handleError(InexistentCommand e);
+	protected abstract void handleError(InexistentCommandException e);
 	protected abstract void handleTimeoutPageFactory(Long chatId, String idPage);
 	protected abstract void handleOtherUpdates(Update update);
 	protected abstract void customInit();
@@ -278,7 +278,7 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 			handleError(e);
 		} catch (WrongParamsNumberException e) {
 			handleError(e);
-		} catch (InexistentCommand e) {
+		} catch (InexistentCommandException e) {
 			handleError(e);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -299,11 +299,11 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 			Command command = new Command(textReceived);
 			ConcurrentHashMap<String, MethodRole> methodsForCommands = Cache.getInstance().get(handlerType);
 			if(methodsForCommands == null) {
-				throw new InexistentCommand("Method not found!", update, command);
+				throw new InexistentCommandException("Method not found!", update, command);
 			}
 			MethodRole methodRole = methodsForCommands.get(command.getCommand());
 			if(methodRole == null || methodRole.getMethod() == null) {
-				throw new InexistentCommand("Method not found!", update, command);
+				throw new InexistentCommandException("Method not found!", update, command);
 			} else {
 				assertRole(methodRole, update);
 				Object[] paramsForMethod = getParams(update, methodRole.getMethod(), command.getParams());

@@ -13,8 +13,8 @@ import org.telegram.telegrambots.api.objects.CallbackQuery;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
-import org.telegrambot.classes.MyTestBot;
-import org.telegrambot.exceptions.InexistentCommand;
+import org.telegrambot.test.MyTestBot;
+import org.telegrambot.exceptions.InexistentCommandException;
 import org.telegrambot.exceptions.WrongParamsNumberException;
 
 public class CommandTest {
@@ -62,7 +62,7 @@ public class CommandTest {
 		
 		spy.onUpdateReceived(update);
 		
-		verify(spy, times(1)).handleError(any(InexistentCommand.class));		
+		verify(spy, times(1)).handleError(any(InexistentCommandException.class));		
 	}
 	
 	@Test
@@ -85,7 +85,7 @@ public class CommandTest {
 		verify(spy, times(1)).handleError(any(WrongParamsNumberException.class));		
 	}
 	
-	@Test
+	/*@Test
 	public void wrongNumberParams_WithUpdate() throws Exception {
 		
 		MyTestBot spy = Mockito.spy(myTestBot);
@@ -103,7 +103,7 @@ public class CommandTest {
 		spy.onUpdateReceived(update);
 		
 		verify(spy, times(1)).handleError(any(WrongParamsNumberException.class));		
-	}
+	}*/
 	
 	@Test
 	public void commandTestParams() throws Exception {
