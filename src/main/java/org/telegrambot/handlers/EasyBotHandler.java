@@ -25,6 +25,7 @@ import org.telegrambot.utils.KeyCache;
 import org.telegrambot.utils.Command;
 import org.telegrambot.utils.GarbageCommunication;
 import org.telegrambot.utils.PagesFactory;
+import org.telegrambot.utils.UpdateUtils;
 
 import com.vdurmont.emoji.EmojiParser;
 
@@ -49,65 +50,6 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 		customInit();
 	}
 
-	public static boolean isFromGroup(Update update) throws Exception {
-		return getChatId(update) < 0;
-	}
-	
-	public static boolean isFromUser(Update update) throws Exception {
-		return !isFromGroup(update);
-	}
-	
-	public static String getText(Update update) {
-		String text = "";
-		if(update != null && update.getMessage() != null) {
-			text = update.getMessage().getText();
-		}
-		return text;
-	}
-	
-	public static String getData(Update update) {
-		String text = "";
-		if(update.hasCallbackQuery() && update.getCallbackQuery() != null && update.getCallbackQuery().getData() != null) {
-			text =  update.getCallbackQuery().getData();
-		}
-		return text;
-	}
-	
-	public static PhotoSize getPhoto(Update update, int index) {
-		if(hasPhoto(update)) {
-			return update.getMessage().getPhoto().get(index);
-		}
-		return null;
-	}
-	
-	public static boolean hasPhoto(Update update) {
-		return update != null && update.getMessage() != null && update.getMessage().getPhoto() != null && !update.getMessage().getPhoto().isEmpty();
-	}
-	
-	public static Long getLong(Update update) {
-		try {
-			return Long.valueOf(getText(update));	
-		} catch (Exception e) {
-			return 0L;
-		}
-	}
-	
-	public static BigDecimal getBigDecimal(Update update) {
-		try {
-			return new BigDecimal(getText(update).replace("€", "").replace(",", ".").trim());	
-		} catch (Exception e) {
-			return new BigDecimal("0");
-		}
-	}
-	
-	public static int getInt(Update update) {
-		try {
-			return Integer.parseInt(getText(update).trim());	
-		} catch (Exception e) {
-			return 0;
-		}
-	}
-	
 	private void init() {
 		
 		Thread thread = new Thread(new GarbageCommunication(communicationForIds));
@@ -180,7 +122,7 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 	protected SendMessage getHTMLMessage(Update update, String text) {
 		SendMessage sendMessage = null;
 		try {
-			sendMessage = new SendMessage(getChatId(update), text);
+			sendMessage = new SendMessage(UpdateUtils.getChatId(update), text);
 			sendMessage.setParseMode("HTML");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -201,7 +143,7 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 	protected <T> void showFirst(PagesFactory<T> pageFactory, List<T> list, Update update, String parseMode) throws Exception {
 		String id = pageFactory.getId();
 		pagesFactory.put(id, pageFactory);
-		Long chatId = getChatId(update);
+		Long chatId = UpdateUtils.getChatId(update);
 		listForPagesFactory.put(chatId, list);
 		SendMessage send;
 		try {
@@ -233,7 +175,7 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 			
 			System.out.println("Messaggio ricevuto: " + update);
 			
-			Long chatId = getChatId(update);
+			Long chatId = UpdateUtils.getChatId(update);
 			CommunicationHandler actualCommunication = communicationForIds.get(chatId);
 			
 			//Page factory
@@ -317,12 +259,12 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 		case ALL:
 			break;
 		case GROUP:
-			if(!isFromGroup(update)) {
+			if(!UpdateUtils.isFromGroup(update)) {
 				throw new InsufficientPermission();
 			}
 			break;
 		case USER:
-			if(!isFromUser(update)) {
+			if(!UpdateUtils.isFromUser(update)) {
 				throw new InsufficientPermission();
 			}
 			break;
@@ -332,20 +274,10 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 		}
 	}
 	
-	public static Long getChatId(Update update) throws Exception {
-		if(update.getMessage() != null) {
-			return update.getMessage().getChatId();
-		} else if(update.getCallbackQuery().getMessage() != null) {
-			return update.getCallbackQuery().getMessage().getChatId();
-		}
-		
-		throw new Exception("Can't get ChatId");
-		
-	}
 
 	protected void start(CommunicationHandler c, Update update) throws RuntimeException, TelegramApiException, Exception {
 		c.start(update);
-		communicationForIds.put(getChatId(update), c);
+		communicationForIds.put(UpdateUtils.getChatId(update), c);
 	}
 	
 	private Object[] getParams(Update update, Method method, Object[] params) {

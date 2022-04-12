@@ -87,14 +87,14 @@ public class PagesFactory<T> {
 	}
 	
 	public SendMessage getFirst(Update update, List<T> list, String parseMode) throws Exception {
-		SendMessage sendMessage = new SendMessage(EasyBotHandler.getChatId(update), buildMessage.messageForEach(list.get(0)));
+		SendMessage sendMessage = new SendMessage(UpdateUtils.getChatId(update), buildMessage.messageForEach(list.get(0)));
 		sendMessage.setParseMode(parseMode);
 		sendMessage.setReplyMarkup(getButtons(0, list));
 		return sendMessage;
 	}
 	
 	public SendMessage getFirst(Update update, List<T> list) throws Exception {
-		SendMessage sendMessage = new SendMessage(EasyBotHandler.getChatId(update), buildMessage.messageForEach(list.get(0)));
+		SendMessage sendMessage = new SendMessage(UpdateUtils.getChatId(update), buildMessage.messageForEach(list.get(0)));
 		sendMessage.setReplyMarkup(getButtons(0, list));
 		return sendMessage;
 	}

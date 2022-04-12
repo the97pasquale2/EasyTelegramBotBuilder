@@ -15,6 +15,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegrambot.utils.InlineKeyboardFactory;
+import org.telegrambot.utils.UpdateUtils;
 
 public class CommunicationHandler {
 	private static final int INDEX_NO = 1;
@@ -88,7 +89,7 @@ public class CommunicationHandler {
 	}
 
 	public void start(Update update) throws RuntimeException, TelegramApiException, Exception {
-		start(EasyBotHandler.getChatId(update));
+		start(UpdateUtils.getChatId(update));
 	}
 	
 	public void start(Long chatId, String id, Update firstResponse) throws RuntimeException, TelegramApiException {
@@ -118,7 +119,7 @@ public class CommunicationHandler {
 	public void handle(Update update) throws Exception {
 		refresh();
 		
-		Long chatId = EasyBotHandler.getChatId(update);
+		Long chatId = UpdateUtils.getChatId(update);
 		if(actualRequestForIds.containsKey(chatId)) {
 			boolean end = true;
 			Request actualRequest = actualRequestForIds.get(chatId);
