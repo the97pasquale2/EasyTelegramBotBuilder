@@ -20,6 +20,7 @@ import org.telegrambot.annotations.Type;
 import org.telegrambot.exceptions.InexistentCommandException;
 import org.telegrambot.exceptions.InsufficientPermission;
 import org.telegrambot.exceptions.WrongParamsNumberException;
+import org.telegrambot.utils.AnnotatedMethodCacher;
 import org.telegrambot.utils.Cache;
 import org.telegrambot.utils.KeyCache;
 import org.telegrambot.utils.Command;
@@ -55,27 +56,8 @@ public abstract class EasyBotHandler extends TelegramLongPollingBot {
 		Thread thread = new Thread(new GarbageCommunication(communicationForIds));
 		thread.start();
 		
-		ConcurrentHashMap<Type, ConcurrentHashMap<String, MethodRole>> methodsCache = Cache.getInstance();
-
-		Class clazz = this.getClass();
-		while(clazz != Object.class) {
-			Method[] methods = clazz.getMethods();
-			for(Method method : methods) {
-				BotHandler command = method.getDeclaredAnnotation(BotHandler.class);
-				if(command != null) {
-					ConcurrentHashMap<String, MethodRole> methodsForString = methodsCache.get(command.type());
-
-					if(methodsForString == null) {
-						methodsCache.put(command.type(), new ConcurrentHashMap<String, MethodRole>());
-						methodsForString = methodsCache.get(command.type());
-					}
-
-					methodsForString.put(command.value(), new MethodRole(method, command.role()));
-				}
-			}
-			clazz = clazz.getSuperclass();
-		}
-
+		AnnotatedMethodCacher cacher = AnnotatedMethodCacher.OfClass(this.getClass());
+		cacher.cacheAllAnnotatedMethod();
 	}
 
 	public EasyBotHandler(DefaultBotOptions options) {
