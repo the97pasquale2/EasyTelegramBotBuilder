@@ -16,7 +16,7 @@ public class InlineKeyboardFactory {
 	}
 	
 	public InlineKeyboardFactory btn(String text, String callbackData) {
-		list.get(row).add(new InlineKeyboardButton(EasyBotHandler.emoji(text)).setCallbackData(callbackData));
+		list.get(row).add(new InlineKeyboardButton(MessageUtils.emoji(text)).setCallbackData(callbackData));
 		return this;
 	}
 

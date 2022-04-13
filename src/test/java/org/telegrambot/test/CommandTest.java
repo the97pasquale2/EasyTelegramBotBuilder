@@ -23,7 +23,7 @@ public class CommandTest {
 	
 	//I just want to test my method because I'm assuming Telegram services are already tested...
 	//This is why I'm forcing setting private fields...
-	
+	/*
 	@Test
 	public void commandTestNoParams() throws Exception {
 		
@@ -85,7 +85,7 @@ public class CommandTest {
 		verify(spy, times(1)).handleError(any(WrongParamsNumberException.class));		
 	}
 	
-	/*@Test
+	@Test
 	public void wrongNumberParams_WithUpdate() throws Exception {
 		
 		MyTestBot spy = Mockito.spy(myTestBot);
@@ -103,7 +103,7 @@ public class CommandTest {
 		spy.onUpdateReceived(update);
 		
 		verify(spy, times(1)).handleError(any(WrongParamsNumberException.class));		
-	}*/
+	}
 	
 	@Test
 	public void commandTestParams() throws Exception {
@@ -240,7 +240,7 @@ public class CommandTest {
 		
 		verify(spy, times(1)).login(update, "USERNAME2", "PASSWORD2");
 	}
-	
+	*/
 	private void set(Object object, String attribute, Object value) throws Exception { //Used for private fields
 		Field f1 = object.getClass().getDeclaredField(attribute);
 		f1.setAccessible(true);

@@ -3,23 +3,26 @@ package org.telegrambot.utils;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.telegram.entities.MethodRole;
+import org.telegram.entities.CommandMethod;
+import org.telegram.interfaces.Controller;
 import org.telegrambot.annotations.BotHandler;
 import org.telegrambot.annotations.Type;
 
 public class AnnotatedMethodCacher {
 	
-	Class classToScrape;
+	private Controller controllerToScrape;
 	
 	private AnnotatedMethodCacher() {}
 	
-	public static AnnotatedMethodCacher OfClass(Class classToScrape) {
+	public static AnnotatedMethodCacher OfClass(Controller controllerToScrape) {
 		AnnotatedMethodCacher cacher = new AnnotatedMethodCacher();
-		cacher.classToScrape = classToScrape;
+		cacher.controllerToScrape = controllerToScrape;
 		return cacher;
 	}
 	
 	public void cacheAllAnnotatedMethod() {
+		Class classToScrape = controllerToScrape.getClass();
+		
 		while(classToScrape != Object.class) {
 			Method[] methods = classToScrape.getMethods();
 			for(Method method : methods) {
@@ -32,16 +35,16 @@ public class AnnotatedMethodCacher {
 		}
 	}
 	private void cacheAnnotatedMethod(Method method, BotHandler command) {
-		final ConcurrentHashMap<Type, ConcurrentHashMap<String, MethodRole>> methodsCache = Cache.getInstance();
+		final ConcurrentHashMap<String,CommandMethod> methodsCacheCommand = Cache.getInstanceCommand();
+		//TODO final ConcurrentHashMap<Type, ConcurrentHashMap<String, CommandMethod>> methodsCacheCallBackQuery = Cache.getInstanceCallBackQuery();
 		
-		ConcurrentHashMap<String, MethodRole> methodsForString = methodsCache.get(command.type());
+		CommandMethod commandMethod = new CommandMethod();
+		commandMethod.setCommand(command.value());
+		commandMethod.setController(controllerToScrape);
+		commandMethod.setRole(command.role());
+		commandMethod.setMethod(method);
 
-		if(methodsForString == null) {
-			methodsCache.put(command.type(), new ConcurrentHashMap<String, MethodRole>());
-			methodsForString = methodsCache.get(command.type());
-		}
-
-		methodsForString.put(command.value(), new MethodRole(method, command.role()));
+		methodsCacheCommand.put(command.value(), commandMethod);
 	}
 
 }

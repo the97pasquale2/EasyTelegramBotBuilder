@@ -1,5 +1,7 @@
 package org.telegrambot.test;
 
+import java.util.List;
+
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegrambot.annotations.BotHandler;
 import org.telegrambot.annotations.Role;
@@ -9,56 +11,8 @@ import org.telegrambot.exceptions.WrongParamsNumberException;
 import org.telegrambot.handlers.EasyBotHandler;
 import org.telegrambot.annotations.Type;
 
-public class MyTestBot extends EasyBotHandler {
+public class MyTestBot {
 
-	@Override
-	public String getBotUsername() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected void handleError(InsufficientPermission e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void handleError(WrongParamsNumberException e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void handleError(InexistentCommandException e) {
-		System.out.println("InexistentCommandException");
-		
-	}
-
-	@Override
-	protected void handleTimeoutPageFactory(Long chatId, String idPage) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void handleOtherUpdates(Update update) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void customInit() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getBotToken() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	@BotHandler("/command")
 	public void command() {
 		System.out.println("Command ok");

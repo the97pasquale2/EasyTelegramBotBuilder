@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import org.telegram.telegrambots.api.objects.PhotoSize;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegrambot.annotations.Role;
+import org.telegrambot.exceptions.InsufficientPermission;
 
 public class UpdateUtils {
 
@@ -75,6 +77,25 @@ public class UpdateUtils {
 		
 		throw new Exception("Can't get ChatId");
 		
+	}
+	
+	public static void assertRole(Role role, Update updateReceived) throws Exception {
+		switch(role) {
+		case ALL:
+			break;
+		case GROUP:
+			if(!UpdateUtils.isFromGroup(updateReceived)) {
+				throw new InsufficientPermission();
+			}
+			break;
+		case USER:
+			if(!UpdateUtils.isFromUser(updateReceived)) {
+				throw new InsufficientPermission();
+			}
+			break;
+		default:
+			break;
+		}
 	}
 	
 }
